@@ -50,6 +50,54 @@ cp -p %{SOURCE2} LICENSE.txt
 sed -i 's/\r//' LICENSE.txt
 chmod 644 LICENSE.txt
 
+# Bundle
+%pom_xpath_replace "pom:project/pom:packaging" "<packaging>bundle</packaging>" .
+
+# Add an OSGi compilant MANIFEST.MF
+%pom_add_plugin org.apache.felix:maven-bundle-plugin . "
+<extensions>true</extensions>
+<configuration>
+	<supportedProjectTypes>
+		<supportedProjectType>bundle</supportedProjectType>
+		<supportedProjectType>jar</supportedProjectType>
+	</supportedProjectTypes>
+	<instructions>
+		<Bundle-Name>\${project.artifactId}</Bundle-Name>
+		<Bundle-Version>\${project.version}</Bundle-Version>
+	</instructions>
+</configuration>
+<executions>
+	<execution>
+		<id>bundle-manifest</id>
+		<phase>process-classes</phase>
+		<goals>
+			<goal>manifest</goal>
+		</goals>
+	</execution>
+</executions>"
+
+# Add the META-INF/INDEX.LIST (fix jar-not-indexed warning) and
+# the META-INF/MANIFEST.MF to the jar archive
+%pom_add_plugin :maven-jar-plugin . "
+<executions>
+	<execution>
+		<phase>package</phase>
+		<configuration>
+			<archive>
+				<manifestFile>\${project.build.outputDirectory}/META-INF/MANIFEST.MF</manifestFile>
+				<manifest>
+					<addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+					<addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
+				</manifest>
+				<index>true</index>
+			</archive>
+		</configuration>
+		<goals>
+			<goal>jar</goal>
+		</goals>
+	</execution>
+</executions>"
+
 %mvn_file org.jetbrains:%{oname} %{name}
 %mvn_alias org.jetbrains:%{oname} com.intellij:
 
