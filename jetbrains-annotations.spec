@@ -106,7 +106,7 @@ chmod 644 LICENSE.txt
 %mvn_build
 
 %install
-%mvn_install -X
+%mvn_install -X -- -r
 
 %files -f .mfiles
 %doc LICENSE.txt
