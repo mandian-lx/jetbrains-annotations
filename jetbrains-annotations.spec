@@ -98,15 +98,14 @@ chmod 644 LICENSE.txt
 	</execution>
 </executions>"
 
-%mvn_file org.jetbrains:%{oname} %{name}
-%mvn_alias org.jetbrains:%{oname} com.intellij:%{oname}
+%mvn_file org.jetbrains:%{oname} %{oname}
+#%mvn_alias org.jetbrains:%{oname} com.intellij:%{oname}
 
 %build
-
 %mvn_build
 
 %install
-%mvn_install -X -- -r -n %{oname}
+%mvn_install
 
 %files -f .mfiles
 %doc LICENSE.txt
