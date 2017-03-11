@@ -3,7 +3,7 @@
 %global oname annotations
 Name:          jetbrains-annotations
 Version:       15.0
-Release:       4.1
+Release:       4
 Summary:       IntelliJ IDEA Annotations
 License:       ASL 2.0
 Group:         Development/Java
